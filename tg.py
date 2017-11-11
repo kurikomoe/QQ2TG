@@ -194,14 +194,12 @@ def GetMsgFromQQ(bot):
             bot.send_message(chat_id=config.CHAT_ID,
                              text="「{1}：{0}」{3}：\n\t{2}".format(
                                  data[0], data[1], data[2], data[3]),
-                             parse_mode="Markdown"
                              )
         else:
             # buddy 消息
             bot.send_message(chat_id=config.CHAT_ID,
                              text="「{1}：{0}」：{2}".format(
                                  data[0], data[1], data[2], data[3]),
-                             parse_mode="Markdown"
                              )
     return
 

@@ -1,10 +1,12 @@
 import logging
 
-LEVEL = logging.INFO
 
 # 尝试载入用户配置
 try:
     import config_user
+
+    LEVEL = config_user.LEVEL
+
     # Telegram Bot Token
     TOKEN = config_user.TOKEN
 
@@ -30,7 +32,9 @@ try:
 
 except Exception as e:
     print(e)
-    # 用户配置载入失败，使用默认值 IMPORTANT
+    LEVEL = logging.INFO
+
+    # 用户配置载入失败，使用默认值
     TOKEN = None
 
     if TOKEN == None:
