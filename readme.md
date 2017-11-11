@@ -82,6 +82,22 @@ python3 tg.py
 
 - 直接输入要回复的信息，之后TGBOT会自动提取出要回复联系人的类型和名字，直接回复。
 
+## 未来的计划
+
+- 将QQBot换成酷Q？
+
+- QQBOT_PLUGIN 与 TelegramBot 通讯支持跨服务器（以后就VPS上24h不停的跑TGBOT,QQBOT看情况按需在本地或VPS上开启
+
+- /focus 系列命令
+
+ 将与BOT的直接聊天转化为对focus状态的联系人的聊天。
+
+- 更多的兼容层，实现与IRC等的兼容
+
+- /block 系列命令，记录屏蔽群消息清单
+
+- /history 系列命令， 记录历史消息并显示
+
 # 鸣谢
 
 - [pandolia/qqbot](https://github.com/pandolia/qqbot) -- 逆向smartqq协议真不是人干的事儿，感谢作者的轮子
