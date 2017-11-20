@@ -99,6 +99,12 @@ def msg(bot, update, args):
     # 获得与QQBOTPLUGIN的通信socket
     s = config.store.s
 
+    # 对于一点都不友好的带 Space 的名字进行解析
+    # 不妨用「下划线」表示空格，之后统一替换，岂不美哉
+    logger.info("origin: %s" % args)
+    args[1] = args[1].replace('_',' ')
+    logger.info("replaced: %s" % args)
+
     ''' data 格式说明
         list[type, name, msg]
             type: group|buddy

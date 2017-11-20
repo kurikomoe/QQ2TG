@@ -16,6 +16,8 @@ import logging
 import config
 import threading
 import json
+import urllib
+import string
 
 # Some Configs
 logging.basicConfig(level=logging.INFO)
@@ -38,11 +40,18 @@ def GetMsgFromTG(bot):
                 1 name: name|qq
                 2 msg: msg
         '''
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(("localhost", config.QQBOT_PORT))
-        cmd = "send %s %s %s" % (data[0],data[1], data[2])
-        sock.send(cmd.encode('utf-8'))
-        sock.close()
+        #  sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #  sock.connect(("localhost", config.QQBOT_PORT))
+        #  cmd = "send %s %s %s" % (data[0],data[1], data[2])
+        #  sock.send(cmd.encode('utf-8'))
+        #  sock.close()
+        # 修改为利用 url 发送消息。。因为 socket 发送的方式对于 space 处理有问题
+        # 8188 需要读取 qqbot 的配置信息，以后考虑自动启动 qqbot 。
+        url = 'http://localhost:{3}/send/{0}/{1}/{2}'.format(data[0],data[1], data[2], config.QQBOT_PORT)
+        url = urllib.parse.quote(url, safe = string.printable)
+        logger.info("msg in GetMsgFromTG: %s" % urllib.parse.quote(url))
+        urllib.request.urlopen(url)
+
     return
 
 

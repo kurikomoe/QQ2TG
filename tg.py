@@ -166,7 +166,7 @@ def GetMsgFromQQ(bot):
     logger.info("GetMsgFromQQ started")
     while True:
         data, addr = s.recvfrom(65565)
-        data = json.loads(data)
+        data = json.loads(data.decode('utf-8'))
         if len(data[2]) == 0:
             data[2] = "SYS: 这里可能有一张图片？？"
         # 如果没有启动转发，则抛弃信息
