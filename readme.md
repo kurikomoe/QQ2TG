@@ -72,6 +72,8 @@ python3 tg.py
 /msg group|buddy|discuss username|qq message
 ```
 
+> 对于包含 space 的群名，使用下划线「_」代表空格
+
 ## 快速回复功能
 
 因为每次打/msg balabala 实在是太麻烦了，于是利用TG的reply功能，可以快速回复消息
