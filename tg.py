@@ -38,6 +38,8 @@ TGBOT_LOCK = config.TGBOT_LOCK
 # global variables
 config.store.started = False
 config.store.s = None
+config.store.qqbot = False
+
 s = None   # 占位方便TagBar显示全局变量
 
 
@@ -247,6 +249,7 @@ def main():
         # 命令处理机制
         startHandle = CommandHandler('start', cmds.start)
         stopHandle = CommandHandler('stop', cmds.stop)
+        qqbotHandle = CommandHandler('qqbot', cmds.qqbot, pass_args=True)
         msgHandle = CommandHandler('msg', cmds.msg, pass_args=True)
         blockHandle = CommandHandler('block', cmds.block, pass_args=True)
         focusHandle = CommandHandler('focus', cmds.focus, pass_args=True)
@@ -255,6 +258,7 @@ def main():
 
         dispatcher.add_handler(startHandle)
         dispatcher.add_handler(stopHandle)
+        dispatcher.add_handler(qqbotHandle)
         dispatcher.add_handler(msgHandle)
         dispatcher.add_handler(blockHandle)
         dispatcher.add_handler(focusHandle)

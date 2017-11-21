@@ -12,6 +12,7 @@ import socket
 import functools
 import config
 import json
+import os
 
 
 logging.basicConfig(level=config.LEVEL)
@@ -22,6 +23,7 @@ CHAT_ID = config.CHAT_ID
 USERNAME = config.USERNAME
 TOKEN = config.TOKEN
 QQBOT_PLUGIN_QQ2TG_LOCK = config.QQBOT_PLUGIN_QQ2TG_LOCK
+QQBOT_USER_CONFIG_NAME = config.QQBOT_USER_CONFIG_NAME
 TGBOT_LOCK = config.TGBOT_LOCK
 
 '''打算实现的commands
@@ -58,8 +60,10 @@ def start(bot, update):
     logger.info(config.CHAT_ID)
 
     bot.send_message(chat_id=update.message.chat_id,
-                     text="已初始化会话 %s: %s" % (config.USERNAME, config.CHAT_ID)
+                     text="栗子：已初始化会话 %s: %s" % (config.USERNAME, config.CHAT_ID)
                      )
+    logger.info("start to invoke qqbot")
+    qqbot(bot, update, ['restart'])
     return
 
 
@@ -85,6 +89,65 @@ def stop(bot, update):
     return
 
 
+@cmdformat("/qqbot start|restart|stop")
+def qqbot(bot, update, args):
+    """qqbot 的操作命令
+    :ussage: %s
+
+    :bot: Telegram bot
+    :update: Telegram update
+    :returns: None
+
+    """
+
+    logger.info("qqbot invoked %s" % args[0])
+    logger.info("qqbot status %s" % config.store.qqbot)
+
+    if len(args) != 1:
+        bot.send_message(chat_id=update.message.chat_id,
+                         text="错误的命令\n" + block.cmd)
+        return
+
+    # TODO 目前还是没有时间读 qqbot 的代码，先用 system
+    # 命令实现，但是这样跨平台就有点复杂了。以后希望能把 qqbot 内置进来吧
+    # 反正我只用 Linux 23333
+    if args[0] == 'start':
+        # TODO 此处可能存在任意执行代码的漏洞
+        if config.store.qqbot == True:
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="栗子：qqbot 已经启动"
+                             )
+            return
+
+        os.system('qqbot -u {0}'.format(QQBOT_USER_CONFIG_NAME))
+        config.store.qqbot = True
+        bot.send_message(chat_id=update.message.chat_id,
+                         text="栗子：qqbot 启动ing"
+                         )
+    elif args[0] == 'stop':
+        if config.store.qqbot == False:
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="栗子：qqbot 已经关闭啦"
+                             )
+            return
+
+        os.system('pkill qqbot')
+        config.store.qqbot = False
+        bot.send_message(chat_id=update.message.chat_id,
+                         text="栗子：qqbot 关闭ing"
+                         )
+    elif args[0] == 'restart':
+        # TODO 此处可能存在任意执行代码的漏洞
+        os.system('pkill qqbot')
+        config.store.qqbot = False
+        os.system('qqbot -u {0}'.format(QQBOT_USER_CONFIG_NAME))
+        config.store.qqbot = True
+        bot.send_message(chat_id=update.message.chat_id,
+                         text="栗子：qqbot 重启ing"
+                         )
+    return
+
+
 @cmdformat("/msg buddy|group name msg")
 def msg(bot, update, args):
     """发送消息
@@ -102,7 +165,7 @@ def msg(bot, update, args):
     # 对于一点都不友好的带 Space 的名字进行解析
     # 不妨用「下划线」表示空格，之后统一替换，岂不美哉
     logger.info("origin: %s" % args)
-    args[1] = args[1].replace('_',' ')
+    args[1] = args[1].replace('_', ' ')
     logger.info("replaced: %s" % args)
 
     ''' data 格式说明
@@ -132,19 +195,19 @@ def block(bot, update, args, cmdstr=233):
         if len(args) == 0:
             # TODO 屏蔽列表
             bot.send_message(chat_id=update.message.chat_id,
-                             text="当前Block列表为："
+                             text="栗子：当前Block列表为："
                              )
         elif len(args) == 2:
             if args[0] not in ['group', 'buddy', 'group-buddy'] or len(args) != 2:
                 raise Exception('ErrorCmd')
             else:
                 bot.send_message(chat_id=update.message.chat_id,
-                                 text="你已经屏蔽了%s: %s，利用/undo撤销上一个命令" % (args[0], args[1]))
+                                 text="栗子：你已经屏蔽了%s: %s，利用/undo撤销上一个命令" % (args[0], args[1]))
         else:
             raise Exception('ErrorCmd')
     except Exception as e:
         bot.send_message(chat_id=update.message.chat_id,
-                         text="错误的命令\n" + block.cmd)
+                         text="栗子：错误的命令\n" + block.cmd)
     return
 
 
@@ -177,7 +240,7 @@ def focus(bot, update, args):
 
     if tmp['isFocus']:
         bot.send_message(chat_id=update.message.chat_id,
-                         text='你刚才正在focus %s: %s\n现在切换focus %s: %s，\n利用/undo命令可以撤销' % (tmp['type'], tmp['name'], args[0], args[1]))
+                         text='栗子：你刚才正在focus %s: %s\n现在切换focus %s: %s，\n利用/undo命令可以撤销' % (tmp['type'], tmp['name'], args[0], args[1]))
         tmp['isFocus'] = True
         tmp['type'] = args[0]
         tmp['name'] = args[1]
@@ -186,7 +249,7 @@ def focus(bot, update, args):
         tmp['type'] = args[0]
         tmp['name'] = args[1]
         bot.send_message(chat_id=update.message.chat_id,
-                         text='你现在focus %s: %s' % (tmp['type'], tmp['name']))
+                         text='栗子：你现在focus %s: %s' % (tmp['type'], tmp['name']))
     return
 
 
@@ -205,11 +268,11 @@ def unfocus(bot, update):
     if item['isFocus']:
         item['isFocus'] = False
         bot.send_message(chat_id=update.message.chat_id,
-                         text='成功unfocus %s: %s' % (item['type'], item['name'])
+                         text='栗子：成功unfocus %s: %s' % (item['type'], item['name'])
                          )
     else:
         bot.send_message(chat_id=update.message.chat_id,
-                         text='你没有focus任何东西哦'
+                         text='栗子：你没有focus任何东西哦'
                          )
 
     return

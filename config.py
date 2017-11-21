@@ -1,6 +1,5 @@
 import logging
 
-
 # 尝试载入用户配置
 try:
     import config_user
@@ -15,6 +14,9 @@ try:
 
     # QQBOT的监听端口，默认值是8188
     QQBOT_PORT = config_user.QQBOT_PORT
+
+    # QQBOT 的用户配置 -u 参数的
+    QQBOT_USER_CONFIG_NAME = config_user.QQBOT_USER_CONFIG_NAME
 
     # TGBOT Listen Address
     TGBOT_LOCK = config_user.TGBOT_LOCK
@@ -44,6 +46,13 @@ except Exception as e:
     # QQBOT_PLUGIN_QQ2TG Listen Address
     QQBOT_PLUGIN_QQ2TG_LOCK = "/tmp/qq.lock"
 
+    # QQBOT_USER_CONFIG_NAME
+    QQBOT_USER_CONFIG_NAME = None
+
+    if QQBOT_USER_CONFIG_NAME == None:
+        print("必须提供 QQBOT_USER_CONFIG_NAME ")
+        exit(-1)
+
     # QQBOT的监听端口，默认值是8188
     QQBOT_PORT = 8188
 
@@ -68,6 +77,7 @@ except Exception as e:
             'type': '',
             'name': '',
         },
+        qqbot = False,
 
 '''
 报文格式说明：

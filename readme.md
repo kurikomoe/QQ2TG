@@ -84,6 +84,20 @@ python3 tg.py
 
 - 直接输入要回复的信息，之后TGBOT会自动提取出要回复联系人的类型和名字，直接回复。
 
+## 启动 qqbot 的功能
+
+> INFO: 这个功能目前是用 os.system 实现的，有注入的危险
+> 另外需要在 config_user.py 里面添加相应的配置 QQBOT_USER_CONFIG_NAME 设置
+
+```
+启动 qqbot 的命令
+/qqbot start|stop|restart
+```
+
+配合自动发送二维码功能，以后就能超方便的重启 qqbot or 获取新的 qqbot 二维码了（因为栗子懒得登录服务器重启了。。）
+
+> INFO: /start 命令会自动执行 /qqbot start
+
 ## 未来的计划
 
 - 将QQBot换成酷Q？
