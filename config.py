@@ -76,8 +76,8 @@ except Exception as e:
             'isFocus': False,
             'type': '',
             'name': '',
-        },
-        qqbot = False,
+        }
+        qqbot = False
 
 '''
 报文格式说明：
